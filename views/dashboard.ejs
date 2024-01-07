@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+     <h2>Dashboard</h2>
+   <% if (user) {%> 
+     <p>Welcome, User <%=user.username%>!</p>
+     <p>Welcome, User <%=user.userid%>!</p>
+     <p>Welcome, User <%=user.exp%>!</p>
+    <%} else { %>
+     <p>Access denied.</p>
+       <%} %>
+
+       <div class="Container"></div>
+       <h1>URL Shortening page</h1>
+       <form method="post" action="/short" class="my-4">
+       <label for="fullUrl" class="for"></label>
+       <input required placeholder="URL"
+                       type="URL"
+                       name="fullUrl"
+                       id="fullUrl"
+                       class="form control">
+                       <button class="btn-btn-success" type="Submit">Submit</button>
+                   </form>
+    
+</body>
+</html>
