@@ -1,10 +1,10 @@
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const saltRounds = 10;
 
 
 const User = require("../model/user")
-const shortlink = require("../model/url")
+const urlSchema = require("../model/url")
 
 exports.getlogin = (req, res) => {
   res.render("login")
@@ -16,6 +16,7 @@ exports.postLogin = async (req, res) => {
     const user = await User.findOne({ username: req.body.username });
     console.log(user,req.body,process.env);
     if (user && (await bcrypt.compare(req.body.pwd, user.password))) {
+      
       const token = jwt.sign(
         { id: user._id, username: user.username },
         process.env.JWT_SECRET,
@@ -25,7 +26,7 @@ exports.postLogin = async (req, res) => {
       );
       res.redirect("/dashboard?token=" + token);
     } else {
-      res.send("Login Falied");
+      res.send("Login Failed");
     }
   } catch (error) {
     console.error(error)
@@ -35,7 +36,7 @@ exports.postLogin = async (req, res) => {
 
 
 exports.getRegister = (req, res) => {
-  res.render("register")
+  res.render("index")
 }
 
 
@@ -56,11 +57,12 @@ exports.postregister = async (req, res) => {
 }
 
 
-exports.getDashboard = (req, res) => {
+exports.getDashboard = async (req, res) => {
   try {
+    const records=await urlSchema.find().exec()
     const token = req.query.token;
     const verified = jwt.verify(token, process.env.JWT_SECRET);
-    res.render("dashboard", { user: verified });
+    res.render("dashboard", { user: verified,token:token,items:records });
   } catch (error) {
     console.log(error);
     res.send("Access denied")
@@ -73,7 +75,8 @@ exports.getIndex =  (req, res) => {
 }
 
 exports.getRedirect = async (req, res) => {
-  const dbObj = await shortlink.findOne({ shortUrl: req.params.shortId }).exec()
+  console.log(req.params)
+  const dbObj = await urlSchema.findOne({ shortUrl: req.params.shortId }).exec()
   if (dbObj) {
     res.redirect(dbObj.longUrl)
   } else {
@@ -84,12 +87,16 @@ exports.getRedirect = async (req, res) => {
 
 exports.saveRecord =  async (req, res) => {
   console.log(req.body)
-  const record = new shortlink({
+  const record = new urlSchema({
     longUrl: req.body.fullUrl,
     // shortUrl:await bcrypt.hash(req.body.fullUrl,saltRounds)
   })
 
   await record.save()
-  res.redirect('/dashboard');
+  const records=await urlSchema.find({}).exec();
+  const token = req.body._csrf;
+  const verified = jwt.verify(token, process.env.JWT_SECRET);
+  res.render("dashboard", {user: verified, token:req.body._csrf,items:records });
+  // res.render("/dashboard?token=" + req.body._csrf,{items:records});
 
 }

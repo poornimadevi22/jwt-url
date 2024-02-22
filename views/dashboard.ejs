@@ -9,8 +9,8 @@
      <h2>Dashboard</h2>
    <% if (user) {%> 
      <p>Welcome, User <%=user.username%>!</p>
-     <p>Welcome, User <%=user.userid%>!</p>
-     <p>Welcome, User <%=user.exp%>!</p>
+     <!-- <p>Welcome, User <%=user.userid%>!</p> -->
+     <!-- <p>Welcome, User <%=user.exp%>!</p> -->
     <%} else { %>
      <p>Access denied.</p>
        <%} %>
@@ -19,6 +19,7 @@
        <h1>URL Shortening page</h1>
        <form method="post" action="/short" class="my-4">
        <label for="fullUrl" class="for"></label>
+       <input type="hidden" name="_csrf" value="<%= token %>">
        <input required placeholder="URL"
                        type="URL"
                        name="fullUrl"
@@ -26,6 +27,31 @@
                        class="form control">
                        <button class="btn-btn-success" type="Submit">Submit</button>
                    </form>
+
+                   <!-- Check if dataFromMongo is not empty -->
+    <% if (items && items.length > 0) { %>
+      <table>
+          <thead>
+              <tr>
+                  <th>Column1</th>
+                  <th>Column2</th>
+                  <!-- Add more columns as needed -->
+              </tr>
+          </thead>
+          <tbody>
+              <!-- Loop through the data and populate the table -->
+              <% items.forEach(item => { %>
+                  <tr>
+                      <td><a href="<%= item.longUrl %>"><%= item.longUrl %></a></td>
+                      <td><a href="/redirect/<%= item.shortUrl %>" target="_blank"><%= item.shortUrl %></a></td>
+                      <!-- Add more columns as needed -->
+                  </tr>
+              <% }); %>
+          </tbody>
+      </table>
+  <% } else { %>
+      <p>No data available.</p>
+  <% } %>
     
 </body>
 </html>

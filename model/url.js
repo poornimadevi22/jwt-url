@@ -15,4 +15,4 @@ const urlschema=new mongoose.Schema({
 })
 
 
-module.exports=mongoose.model("url",urlschema)
+module.exports=mongoose.model("url",urlschema);
