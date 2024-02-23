@@ -28,23 +28,23 @@
                        <button class="btn-btn-success" type="Submit">Submit</button>
                    </form>
 
-                   <!-- Check if dataFromMongo is not empty -->
+             
     <% if (items && items.length > 0) { %>
       <table>
           <thead>
               <tr>
                   <th>Column1</th>
                   <th>Column2</th>
-                  <!-- Add more columns as needed -->
+                
               </tr>
           </thead>
           <tbody>
-              <!-- Loop through the data and populate the table -->
+          
               <% items.forEach(item => { %>
                   <tr>
                       <td><a href="<%= item.longUrl %>"><%= item.longUrl %></a></td>
                       <td><a href="/redirect/<%= item.shortUrl %>" target="_blank"><%= item.shortUrl %></a></td>
-                      <!-- Add more columns as needed -->
+                  
                   </tr>
               <% }); %>
           </tbody>

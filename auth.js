@@ -4,19 +4,19 @@ const authroute=require("./router/authroute")
 const mongoose=require("mongoose");
 
 
-const Port=8000;
+const Port=8080;
 
 
-require("dotenv").config();
+require("dotenv").config(".env");
 app.set("view engine", "ejs")
   
 app.use(express.urlencoded({ extended: true }));
 
 
-
+console.log(process.env.MONGODB)
 
 mongoose
-  .connect('mongodb://localhost:27017/auth-url',{
+  .connect(`${process.env.MONGODB}/auth-url`,{
     useNewUrlParser:true,
     useUnifiedTopology:true,
 }).then(()=>{
